@@ -55,14 +55,7 @@ export const getCategoriesAndDocuments = async () => {
   const q = query(collectionRef); // silka buticha zapros qilish un
 
   const querySnapshot = await getDocs(q);
-  const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
-    const { title, items } = docSnapshot.data();
-    acc[title.toLowerCase()] = items; // {title:'Hats',items:[{},{}]} shunaqa edi
-    // kegin Hats:[{},{}] bo`lib qoldi ya`ni Hats degan qiymatga arrayimiz biriktirilib quyildi
-    return acc;
-  }, {});
-
-  return categoryMap;
+  return querySnapshot.docs.map(docSnapshot => docSnapshot.data())
 };
 
 export const createUserDocumentFromAuth = async ( //authenticated bo`lgan userlarni firestore db ga set qiladi
