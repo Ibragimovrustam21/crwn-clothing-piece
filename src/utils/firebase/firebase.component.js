@@ -84,7 +84,7 @@ export const createUserDocumentFromAuth = async ( //authenticated bo`lgan userla
     }
   }
   // agar user bulsa shunchaki silkasini return
-  return userDocRef;
+  return userSnapshot;
 };
 // sign up qilamiz email password bn
 export const createAuthUserWithEmailAndPassword = async (email, password) => {
@@ -99,8 +99,22 @@ export const signInAuthUserWithEmailAndPassword = async (email, password) => {
 
   return await signInWithEmailAndPassword(auth, email, password);
 };
+
 // logOut qilish un kerak
 export const signOutUser = async () => await signOut(auth);
 
 // user Authenticated bo`lsa yoki log out qilsa shuni eshitib turadigan helper listener function 
 export const onAuthStateChangedListener = (callback) => onAuthStateChanged(auth, callback);
+
+export const getCurrentUser = () => {
+  return new Promise((resolve, reject) => {
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      (userAuth) => {
+        unsubscribe()
+        resolve(userAuth)
+      },
+      reject
+    )
+  })
+}

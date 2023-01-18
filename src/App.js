@@ -6,22 +6,13 @@ import Checkout from "./routes/checkout/Checkout"
 import Home from "./routes/home/Home"
 import Navigation from "./routes/navigation/Navigation"
 import Shop from "./routes/shop/Shop"
-import { createUserDocumentFromAuth, onAuthStateChangedListener } from "./utils/firebase/firebase.component"
-import { setCurrentUser } from './store/user/user-action'
+import { checkUserSession } from './store/user/user-action'
 
 const App = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    // onAuthStateChangedListener bu shunday listenerki biz sign in or sign out qilganimizda bu buni darhola sezib 
-    // bizga malumot bera olarkan
-    const unsubscribe = onAuthStateChangedListener((user) => {
-      if (user) createUserDocumentFromAuth(user) // bu googleSignIn qilish un (set firestore)
-
-      dispatch(setCurrentUser(user))  // user => object(data) or null bo`lishi mn
-    })
-
-    return unsubscribe;
+    dispatch(checkUserSession())
   }, [dispatch])
 
   return (

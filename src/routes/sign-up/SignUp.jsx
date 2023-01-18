@@ -1,10 +1,8 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import Button from '../../components/UI/button/Button'
 import FormInput from '../../components/UI/form-input/FormInput'
-import {
-  createAuthUserWithEmailAndPassword,
-  createUserDocumentFromAuth
-} from '../../utils/firebase/firebase.component'
+import { emailSignUpStart } from '../../store/user/user-action'
 
 import { SignUpContainer } from './signUp.styles'
 
@@ -18,7 +16,7 @@ const initialFormFields = {
 const SignUp = () => {
   const [formFields, setFormFields] = useState(initialFormFields)
   const { displayName, email, password, confirmPassword } = formFields
-
+  const dispatch = useDispatch()
   const handleSubmit = async (event) => {
     event.preventDefault()
 
@@ -27,14 +25,8 @@ const SignUp = () => {
       return
     }
 
-    try {
-      const { user } = await createAuthUserWithEmailAndPassword(email, password) // userni firebasega joylab quydik 
-      await createUserDocumentFromAuth(user, { displayName }) // userni firestore Database ga ham joyladik
-
-      setFormFields(initialFormFields) // formFields ni reset qildik
-    } catch (error) {
-      console.log(error.message);
-    }
+    dispatch(emailSignUpStart(email, password, displayName))
+    setFormFields(initialFormFields) // formFields ni reset qildik
   }
 
   const handleChange = (event) => {
